@@ -1,0 +1,82 @@
+using System;
+using TabControlExperiments;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static TabControlExperiments.BlockChain;
+using System.Threading.Tasks;
+
+namespace TestingProgram
+{
+    [TestClass]
+    public class UnitTest1
+    {
+        BlockChain TestObject;
+
+        [TestInitialize]
+        public void SetBlocksToInitialState()
+        {
+            TestObject = GetInitializedBlockChain();
+            string[] testData = new string[] { "0", "1", "2", "3", "4" };
+
+            for (int i = 0; i < 5; i++)
+            {
+                TestObject.Blocks[i].Data = testData[i];
+            }
+        }
+      
+        public void IsMined()
+        {
+            foreach (int i in Enumerable.Range(0, 5))
+            {
+                if (TestObject.Blocks[i] is Block B)
+                {
+                    if (!B.IsSigned)
+                    {
+                        Task.Factory.StartNew(() => B.Mine()).Wait();
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void NonceChecker()
+        {
+            IsMined();
+            Assert.AreEqual(TestObject.Blocks[0].Nonce, "2729");
+            Assert.AreEqual(TestObject.Blocks[1].Nonce, "7842");
+            Assert.AreEqual(TestObject.Blocks[2].Nonce, "24126");
+            Assert.AreEqual(TestObject.Blocks[3].Nonce, "73649");
+            Assert.AreEqual(TestObject.Blocks[4].Nonce, "163222");            
+        }
+
+        [TestMethod]
+        public void PreviousHashChecker()
+        {
+            Assert.AreEqual(TestObject.Blocks[0].PreviousHash, "000000000000");
+            Assert.AreEqual(TestObject.Blocks[1].PreviousHash, TestObject.Blocks[0].Hash);
+            Assert.AreEqual(TestObject.Blocks[2].PreviousHash, TestObject.Blocks[1].Hash);
+            Assert.AreEqual(TestObject.Blocks[3].PreviousHash, TestObject.Blocks[2].Hash);
+            Assert.AreEqual(TestObject.Blocks[4].PreviousHash, TestObject.Blocks[3].Hash);
+        }
+
+        [TestMethod]
+        public void IDChecker()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.AreEqual(TestObject.Blocks[i].ID, i.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void HashLengthCheck()
+        {
+            IsMined();
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.AreEqual(TestObject.Blocks[i].Hash.Length, 40);
+            }
+        }
+
+    }
+}
