@@ -42,11 +42,11 @@ namespace TestingProgram
         public void NonceChecker()
         {
             IsMined();
-            Assert.AreEqual(TestObject.Blocks[0].Nonce, "2729");
-            Assert.AreEqual(TestObject.Blocks[1].Nonce, "7842");
-            Assert.AreEqual(TestObject.Blocks[2].Nonce, "24126");
-            Assert.AreEqual(TestObject.Blocks[3].Nonce, "73649");
-            Assert.AreEqual(TestObject.Blocks[4].Nonce, "163222");            
+            Assert.AreEqual(TestObject.Blocks[0].Nonce, "24647");
+            Assert.AreEqual(TestObject.Blocks[1].Nonce, "4489");
+            Assert.AreEqual(TestObject.Blocks[2].Nonce, "9691");
+            Assert.AreEqual(TestObject.Blocks[3].Nonce, "29889");
+            Assert.AreEqual(TestObject.Blocks[4].Nonce, "49991");            
         }
 
         [TestMethod]
